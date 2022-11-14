@@ -1,0 +1,168 @@
+import { setGlobalState, useGlobalState } from '../store'
+import { FaTimes } from 'react-icons/fa'
+import { useState } from 'react'
+
+const CreatePoll = () => {
+  const [createPollModal] = useGlobalState('createPollModal')
+  const [title, setTitle] = useState('')
+  const [startAt, setStartAt] = useState('')
+  const [endAt, setEndAt] = useState('')
+  const [description, setDescription] = useState('')
+  const [image, setImage] = useState('')
+
+  const closeModal = () => {
+    setGlobalState('createPollModal', 'scale-0')
+  }
+
+  const toTimestamp = (strDate) => {
+    const datum = Date.parse(strDate)
+    return datum / 1000
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!title || !image || !startAt || !endAt || !description) return
+
+    const params = {
+      title,
+      image,
+      startAt: toTimestamp(startAt),
+      endAt: toTimestamp(endAt),
+      description,
+    }
+
+    console.log(params)
+    closeModal()
+    resetForm()
+  }
+
+  const resetForm = () => {
+    setTitle('')
+    setImage('')
+    setDescription('')
+    setStartAt('')
+    setEndAt('')
+  }
+
+  return (
+    <div
+      className={`fixed top-0 left-0 w-screen h-screen flex items-center
+      justify-center bg-black bg-opacity-50 transform transition-transform
+      duration-300 ${createPollModal}`}
+    >
+      <div className="bg-white shadow-xl shadow-black rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <div className="flex flex-row justify-between items-center">
+            <p className="font-semibold text-black">Add New Poll</p>
+            <button
+              type="button"
+              onClick={closeModal}
+              className="border-0 bg-transparent focus:outline-none"
+            >
+              <FaTimes className="text-black" />
+            </button>
+          </div>
+
+          {image ? (
+            <div className="flex flex-row justify-center items-center rounded-xl mt-5">
+              <div className="shrink-0 rounded-xl overflow-hidden h-20 w-20">
+                <img
+                  alt="Contestant"
+                  className="h-full w-full object-cover cursor-pointer"
+                  src={image}
+                />
+              </div>
+            </div>
+          ) : null}
+
+          <div className="flex flex-row justify-between items-center bg-gray-300 rounded-xl mt-5">
+            <input
+              className="block w-full text-sm
+                text-slate-500 bg-transparent border-0
+                focus:outline-none focus:ring-0"
+              type="text"
+              name="title"
+              placeholder="Title"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
+              required
+            />
+          </div>
+
+          <div className="flex flex-row justify-between items-center bg-gray-300 rounded-xl mt-5">
+            <input
+              className="block w-full text-sm
+            text-slate-500 bg-transparent border-0
+              focus:outline-none focus:ring-0"
+              type="date"
+              name="date"
+              placeholder="Date"
+              onChange={(e) => setStartAt(e.target.value)}
+              value={startAt}
+              required
+            />
+          </div>
+
+          <div className="flex flex-row justify-between items-center bg-gray-300 rounded-xl mt-5">
+            <input
+              className="block w-full text-sm
+            text-slate-500 bg-transparent border-0
+              focus:outline-none focus:ring-0"
+              type="date"
+              name="date"
+              placeholder="Date"
+              onChange={(e) => setEndAt(e.target.value)}
+              value={endAt}
+              required
+            />
+          </div>
+
+          <div className="flex flex-row justify-between items-center bg-gray-300 rounded-xl mt-5">
+            <input
+              className="block w-full text-sm
+                text-slate-500 bg-transparent border-0
+                focus:outline-none focus:ring-0"
+              type="url"
+              name="image"
+              placeholder="Image URL"
+              onChange={(e) => setImage(e.target.value)}
+              pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+              value={image}
+              required
+            />
+          </div>
+
+          <div className="flex flex-row justify-between items-center bg-gray-300 rounded-xl mt-5">
+            <textarea
+              className="block w-full text-sm resize-none
+                text-slate-500 bg-transparent border-0
+                focus:outline-none focus:ring-0 h-20"
+              type="text"
+              name="description"
+              placeholder="Description"
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
+              required
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            className="flex flex-row justify-center items-center
+              w-full text-white text-md bg-blue-500
+              py-2 px-5 rounded-full drop-shadow-xl
+              border-transparent border
+              hover:bg-transparent hover:text-blue-500
+              hover:border hover:border-blue-500
+              focus:outline-none focus:ring mt-5"
+          >
+            Create Poll
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+export default CreatePoll

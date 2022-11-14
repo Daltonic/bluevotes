@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import CreatePoll from './components/CreatePoll'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Register from './components/Register'
@@ -16,6 +17,7 @@ const App = () => {
       </Routes>
 
       <Register />
+      <CreatePoll />
       <Footer />
     </div>
   )
