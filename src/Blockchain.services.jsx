@@ -104,6 +104,17 @@ const getPolls = async () => {
   }
 }
 
+const getPoll = async (id) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const contract = getEtheriumContract()
+    const poll = await contract.getPoll(id)
+    setGlobalState('poll', structuredPolls([poll])[0])
+  } catch (error) {
+    reportError(error)
+  }
+}
+
 const structuredPolls = (polls) =>
   polls
     .map((poll) => ({
@@ -142,4 +153,5 @@ export {
   getUser,
   createPoll,
   getPolls,
+  getPoll
 }
