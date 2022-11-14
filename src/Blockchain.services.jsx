@@ -57,6 +57,19 @@ const connectWallet = async () => {
   }
 }
 
+const createPoll = async ({ title, image, startAt, endAt, description }) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = getEtheriumContract()
+    await contract.createPoll(image, title, description, startAt, endAt, {
+      from: connectedAccount,
+    })
+  } catch (error) {
+    reportError(error)
+  }
+}
+
 const registerUser = async ({ fullname, image }) => {
   try {
     if (!ethereum) return alert('Please install Metamask')
@@ -85,4 +98,4 @@ const reportError = (error) => {
   throw new Error('No ethereum object.')
 }
 
-export { isWallectConnected, connectWallet, registerUser, getUser }
+export { isWallectConnected, connectWallet, registerUser, getUser, createPoll }

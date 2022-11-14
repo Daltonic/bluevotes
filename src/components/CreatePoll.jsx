@@ -1,6 +1,7 @@
 import { setGlobalState, useGlobalState } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import { useState } from 'react'
+import { createPoll } from '../Blockchain.services'
 
 const CreatePoll = () => {
   const [createPollModal] = useGlobalState('createPollModal')
@@ -32,7 +33,7 @@ const CreatePoll = () => {
       description,
     }
 
-    console.log(params)
+    await createPoll(params)
     closeModal()
     resetForm()
   }
