@@ -29,22 +29,19 @@ contract BlueVotes {
         string fullname;
         address voter;
         uint votes;
+        address[] voters;
     }
 
     uint totalPolls;
-    uint totalVoters;
-    address admin;
+    uint totalUsers;
+    
     mapping(uint => PollStruct) polls;
-    mapping(uint => VoterStruct[]) contestantsIn;
-    mapping(uint => VoterStruct[]) votesOf;
     mapping(address => VoterStruct) users;
     mapping(uint =>  mapping(address => bool)) voted;
     mapping(uint =>  mapping(address => bool)) contested;
+    mapping(uint =>  mapping(uint => VoterStruct)) contestantsIn;
     mapping(uint =>  bool) pollExist;
-
-    constructor() {
-        admin = msg.sender;
-    }
+    mapping(uint =>  bool) contestantExist;
 
     event Voted (
         string fullname,
@@ -62,7 +59,6 @@ contract BlueVotes {
         require(bytes(title).length > 0, "Title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
         require(bytes(image).length > 0, "Image URL cannot be empty");
-        require(startsAt > block.timestamp, "Start date cannot be now");
         require(endsAt > startsAt, "End date must be greater than start date");
 
         PollStruct memory poll;
@@ -91,7 +87,6 @@ contract BlueVotes {
         require(bytes(title).length > 0, "Title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
         require(bytes(image).length > 0, "Image URL cannot be empty");
-        require(startsAt < block.timestamp, "Start date cannot be now");
         require(polls[id].status <= PollStatus.OPEN, "Polling already started");
         require(endsAt > startsAt, "End date must be greater than start date");
 
@@ -126,7 +121,7 @@ contract BlueVotes {
         string memory fullname
     ) public {
         VoterStruct memory user;
-        user.id = totalVoters++;
+        user.id = totalUsers++;
         user.image = image;
         user.fullname = fullname;
         user.voter = msg.sender;
@@ -137,31 +132,36 @@ contract BlueVotes {
         require(pollExist[id], "Poll not found");
         require(!contested[id][msg.sender], "Already contested");
 
-        polls[id].contestants++;
-        contestantsIn[id].push(users[msg.sender]);
-        contested[id][msg.sender] = true;
+        VoterStruct memory user = users[msg.sender];
+        uint cid = polls[id].contestants;
+
+        if(!contestantExist[cid]) {
+            contestantsIn[id][cid] = user;
+            contested[id][msg.sender] = true;
+            contestantExist[user.id] = true;
+            polls[id].contestants++;
+        }
     }
 
     function listContestants(uint id) public view returns (VoterStruct[] memory Contestants) {
         require(pollExist[id], "Poll not found");
 
-        Contestants = new VoterStruct[](contestantsIn[id].length);
-        for(uint i = 0; i < contestantsIn[id].length; i++) {
+        uint cid = polls[id].contestants;
+        Contestants = new VoterStruct[](cid);
+        for(uint i = 0; i < cid; i++) {
             Contestants[i] = contestantsIn[id][i];
         }
     }
 
-    function vote(uint id) public {
+    function vote(uint id, uint cid) public {
         require(pollExist[id], "Poll not found");
         require(!voted[id][msg.sender], "Already voted");
-        require(polls[id].startsAt < block.timestamp, "Start date cannot be now");
         require(polls[id].status <= PollStatus.OPEN, "Polling already started");
         require(polls[id].endsAt > polls[id].startsAt, "End date must be greater than start date");
 
-        VoterStruct memory voter = users[msg.sender];
-        voter.votes++;
         polls[id].votes++;
-        votesOf[id].push(voter);
+        contestantsIn[id][cid].votes++;
+        contestantsIn[id][cid].voters.push(msg.sender);
         voted[id][msg.sender] = true;
     }
 }
