@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { getUser, isWallectConnected } from './Blockchain.services'
+import { getPolls, getUser, isWallectConnected } from './Blockchain.services'
 import CreatePoll from './components/CreatePoll'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -13,6 +13,7 @@ const App = () => {
   useEffect(async () => {
     await isWallectConnected().then(async () => {
       console.log('Blockchain loaded')
+      await getPolls()
       await getUser()
     })
   }, [])

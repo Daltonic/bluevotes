@@ -57,12 +57,12 @@ const connectWallet = async () => {
   }
 }
 
-const createPoll = async ({ title, image, startAt, endAt, description }) => {
+const createPoll = async ({ title, image, startsAt, endsAt, description }) => {
   try {
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.createPoll(image, title, description, startAt, endAt, {
+    await contract.createPoll(image, title, description, startsAt, endsAt, {
       from: connectedAccount,
     })
   } catch (error) {
@@ -93,9 +93,53 @@ const getUser = async () => {
   }
 }
 
+const getPolls = async () => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const contract = getEtheriumContract()
+    const polls = await contract.getPolls()
+    setGlobalState('polls', structuredPolls(polls))
+  } catch (error) {
+    reportError(error)
+  }
+}
+
+const structuredPolls = (polls) =>
+  polls
+    .map((poll) => ({
+      id: Number(poll.id),
+      status: Number(poll.status),
+      votes: Number(poll.votes),
+      startsAt: toDate(poll.startsAt.toNumber() * 1000),
+      endsAt: toDate(poll.endsAt.toNumber() * 1000),
+      contestants: Number(poll.contestants),
+      director: poll.director,
+      image: poll.image,
+      title: poll.title,
+      description: poll.description,
+      timestamp: new Date(poll.timestamp.toNumber()).getTime(),
+    }))
+    .reverse()
+
+const toDate = (timestamp) => {
+  const date = new Date(timestamp)
+  const dd = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`
+  const mm =
+    date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`
+  const yyyy = date.getFullYear()
+  return `${yyyy}-${mm}-${dd}`
+}
+
 const reportError = (error) => {
   console.log(error.message)
   throw new Error('No ethereum object.')
 }
 
-export { isWallectConnected, connectWallet, registerUser, getUser, createPoll }
+export {
+  isWallectConnected,
+  connectWallet,
+  registerUser,
+  getUser,
+  createPoll,
+  getPolls,
+}

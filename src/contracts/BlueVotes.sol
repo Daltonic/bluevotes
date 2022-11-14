@@ -64,7 +64,7 @@ contract BlueVotes {
         require(bytes(title).length > 0, "Title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
         require(bytes(image).length > 0, "Image URL cannot be empty");
-        require(endsAt > startsAt, "End date must be greater than start date");
+        require(startsAt > 0 && endsAt > startsAt, "End date must be greater than start date");
 
         PollStruct memory poll;
         poll.id = totalPolls++;
@@ -74,6 +74,7 @@ contract BlueVotes {
         poll.startsAt = startsAt;
         poll.endsAt = endsAt;
         poll.director = msg.sender;
+        poll.timestamp = block.timestamp;
 
         polls[poll.id] = poll;
         pollExist[poll.id] = true;

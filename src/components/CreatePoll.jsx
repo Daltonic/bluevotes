@@ -6,8 +6,8 @@ import { createPoll } from '../Blockchain.services'
 const CreatePoll = () => {
   const [createPollModal] = useGlobalState('createPollModal')
   const [title, setTitle] = useState('')
-  const [startAt, setStartAt] = useState('')
-  const [endAt, setEndAt] = useState('')
+  const [startsAt, setStartsAt] = useState('')
+  const [endsAt, setEndsAt] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState('')
 
@@ -23,13 +23,13 @@ const CreatePoll = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if (!title || !image || !startAt || !endAt || !description) return
+    if (!title || !image || !startsAt || !endsAt || !description) return
 
     const params = {
       title,
       image,
-      startAt: toTimestamp(startAt),
-      endAt: toTimestamp(endAt),
+      startsAt: toTimestamp(startsAt),
+      endsAt: toTimestamp(endsAt),
       description,
     }
 
@@ -42,8 +42,8 @@ const CreatePoll = () => {
     setTitle('')
     setImage('')
     setDescription('')
-    setStartAt('')
-    setEndAt('')
+    setStartsAt('')
+    setEndsAt('')
   }
 
   return (
@@ -99,8 +99,8 @@ const CreatePoll = () => {
               type="date"
               name="date"
               placeholder="Date"
-              onChange={(e) => setStartAt(e.target.value)}
-              value={startAt}
+              onChange={(e) => setStartsAt(e.target.value)}
+              value={startsAt}
               required
             />
           </div>
@@ -113,8 +113,8 @@ const CreatePoll = () => {
               type="date"
               name="date"
               placeholder="Date"
-              onChange={(e) => setEndAt(e.target.value)}
-              value={endAt}
+              onChange={(e) => setEndsAt(e.target.value)}
+              value={endsAt}
               required
             />
           </div>
