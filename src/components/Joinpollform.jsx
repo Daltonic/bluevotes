@@ -1,5 +1,4 @@
-import React from 'react'
-import { setGlobalState, useGlobalState } from '../store/index'
+import { setGlobalState, useGlobalState } from '../store'
 import { FaTimes } from 'react-icons/fa'
 
 const Joinpollform = () => {
@@ -9,48 +8,34 @@ const Joinpollform = () => {
   }
   return (
     <div
-      className={
-        `fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-black bg-opacity-50 transform transition-transform duration-300 
-        ${boxModal}`}
+      className={`fixed top-0 left-0 w-screen h-screen flex items-center
+      justify-center bg-black bg-opacity-50 transform transition-transform
+      duration-300 ${boxModal}`}
     >
-      <div class="block p-6 rounded-lg shadow-lg bg-white max-w-md">
-        <div className='flex justify-center p-10'>
-          <button
-            type="button"
-            onClick={onClose}
-            className="border-0"
-          >
+      <div className="block p-6 rounded-lg shadow-lg bg-white max-w-md">
+        <div className="flex justify-center p-10">
+          <button type="button" onClick={onClose} className="border-0">
             <FaTimes className="" />
           </button>
         </div>
 
         <form>
-          <div class="mb-3 w-96">
+          <div className="mb-3 w-96">
             <input
-              class="form-control
-    block
-    w-full
-    px-3
-    py-1.5
-    text-base
-    font-normal
-    text-gray-700
-    bg-white bg-clip-padding
-    border border-solid border-gray-300
-    rounded
-    transition
-    ease-in-out
-    m-0
-    focus:text-gray-700 focus:bg-white focus:border-green-600 focus:outline-none"
+              className="form-control block w-full px-3 py-1.5
+                text-base font-normal text-gray-700 bg-white bg-clip-padding
+                border border-solid border-gray-300 rounded
+                transition ease-in-out m-0 focus:text-gray-700 focus:bg-white
+                focus:border-green-600 focus:outline-none"
               type="file"
               id="formFile"
             />
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="form-group mb-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="form-group mb-6">
               <input
                 type="text"
-                class="form-control
+                className="form-control
           block
           w-full
           px-3
@@ -70,10 +55,10 @@ const Joinpollform = () => {
                 placeholder="First name"
               />
             </div>
-            <div class="form-group mb-6">
+            <div className="form-group mb-6">
               <input
                 type="text"
-                class="form-control
+                className="form-control
           block
           w-full
           px-3
@@ -94,10 +79,10 @@ const Joinpollform = () => {
               />
             </div>
           </div>
-          <div class="form-group mb-6">
+          <div className="form-group mb-6">
             <input
               type="email"
-              class="form-control block
+              className="form-control block
         w-full
         px-3
         py-1.5
@@ -118,7 +103,6 @@ const Joinpollform = () => {
         </form>
       </div>
     </div>
-    
   )
 }
 
