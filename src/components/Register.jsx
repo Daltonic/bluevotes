@@ -1,6 +1,7 @@
 import { setGlobalState, useGlobalState } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import { useState } from 'react'
+import { registerUser } from '../Blockchain.services'
 
 const Register = () => {
   const [contestModal] = useGlobalState('contestModal')
@@ -21,7 +22,15 @@ const Register = () => {
       image,
     }
 
-    console.log(params)
+    await registerUser(params)
+    console.log('User Registered')
+    resetForm()
+    closeModal()
+  }
+
+  const resetForm = () => {
+    setFullname('')
+    setImage('')
   }
 
   return (
@@ -76,7 +85,7 @@ const Register = () => {
                 focus:outline-none focus:ring-0"
               type="url"
               name="image"
-              placeholder="Image"
+              placeholder="Image URL"
               onChange={(e) => setImage(e.target.value)}
               pattern="^(http(s)?:\/\/)+[\w\-\._~:\/?#[\]@!\$&'\(\)\*\+,;=.]+$"
               value={image}

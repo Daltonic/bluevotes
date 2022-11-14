@@ -1,6 +1,8 @@
-import { setGlobalState } from '../store/index'
+import { setGlobalState, useGlobalState } from '../store/index'
 
 const Hero = () => {
+  const [user] = useGlobalState('user')
+
   return (
     <div className="text-center mt-10 p-4">
       <h1 className="text-5xl text-black-600 font-bold">
@@ -14,7 +16,7 @@ const Hero = () => {
         the <strong>Blockchain Technology</strong>{' '}
       </p>
       <div className="flex justify-center pt-10">
-        <div className="pr-5">
+        {user?.fullname ? (
           <button
             type="button"
             className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs
@@ -25,8 +27,7 @@ const Hero = () => {
           >
             Create Poll
           </button>
-        </div>
-        <div>
+        ) : (
           <button
             type="button"
             className="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium
@@ -36,7 +37,7 @@ const Hero = () => {
           >
             Register
           </button>
-        </div>
+        )}
       </div>
     </div>
   )

@@ -32,8 +32,8 @@ const isWallectConnected = async () => {
 
     window.ethereum.on('accountsChanged', async () => {
       setGlobalState('connectedAccount', accounts[0].toLowerCase())
-      await logOutWithCometChat()
       await isWallectConnected()
+      await getUser()
     })
 
     if (accounts.length) {
@@ -57,7 +57,32 @@ const connectWallet = async () => {
   }
 }
 
-export {
-  isWallectConnected,
-  connectWallet,
+const registerUser = async ({ fullname, image }) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = getEtheriumContract()
+    await contract.register(image, fullname, { from: connectedAccount })
+  } catch (error) {
+    reportError(error)
+  }
 }
+
+const getUser = async () => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = getEtheriumContract()
+    const user = await contract.users(connectedAccount)
+    setGlobalState('user', user)
+  } catch (error) {
+    reportError(error)
+  }
+}
+
+const reportError = (error) => {
+  console.log(error.message)
+  throw new Error('No ethereum object.')
+}
+
+export { isWallectConnected, connectWallet, registerUser, getUser }

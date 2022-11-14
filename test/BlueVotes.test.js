@@ -34,6 +34,10 @@ describe('BlueVotes', () => {
 
   describe('Poll', () => {
     beforeEach(async () => {
+      await contract.register(image1, fullname1, {
+        from: director.address,
+      })
+      
       await contract.createPoll(image, title, description, startsAt, endsAt, {
         from: director.address,
       })

@@ -36,12 +36,12 @@ contract BlueVotes {
     uint totalUsers;
     
     mapping(uint => PollStruct) polls;
-    mapping(address => VoterStruct) users;
+    mapping(address => VoterStruct) public users;
     mapping(uint =>  mapping(address => bool)) voted;
     mapping(uint =>  mapping(address => bool)) contested;
     mapping(uint =>  mapping(uint => VoterStruct)) contestantsIn;
-    mapping(uint =>  bool) pollExist;
     mapping(uint =>  bool) contestantExist;
+    mapping(uint =>  bool) pollExist;
 
     event Voted (
         string fullname,
@@ -49,13 +49,18 @@ contract BlueVotes {
         uint timestamp
     );
 
+    modifier userOnly() {
+        require(users[msg.sender].voter == msg.sender, "You've gotta register first");
+        _;
+    }
+
     function createPoll(
         string memory image,
         string memory title,
         string memory description,
         uint startsAt,
         uint endsAt
-    ) public {
+    ) public userOnly {
         require(bytes(title).length > 0, "Title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
         require(bytes(image).length > 0, "Image URL cannot be empty");
@@ -81,7 +86,7 @@ contract BlueVotes {
         string memory description,
         uint startsAt,
         uint endsAt
-    ) public {
+    ) public userOnly {
         require(pollExist[id], "Poll not found");
         require(polls[id].director == msg.sender, "Unauthorized entity");
         require(bytes(title).length > 0, "Title cannot be empty");
@@ -97,7 +102,7 @@ contract BlueVotes {
         polls[id].image = image;
     }
 
-    function deletePoll(uint id) public {
+    function deletePoll(uint id) public userOnly {
         require(pollExist[id], "Poll not found");
         require(polls[id].director == msg.sender, "Unauthorized entity");
         polls[id].status = PollStatus.DELETED;
@@ -128,7 +133,7 @@ contract BlueVotes {
         users[msg.sender] = user;
     }
 
-    function contest(uint id) public {
+    function contest(uint id) public userOnly {
         require(pollExist[id], "Poll not found");
         require(!contested[id][msg.sender], "Already contested");
 
@@ -153,7 +158,7 @@ contract BlueVotes {
         }
     }
 
-    function vote(uint id, uint cid) public {
+    function vote(uint id, uint cid) public userOnly {
         require(pollExist[id], "Poll not found");
         require(!voted[id][msg.sender], "Already voted");
         require(polls[id].status <= PollStatus.OPEN, "Polling already started");
