@@ -65,6 +65,7 @@ const createPoll = async ({ title, image, startsAt, endsAt, description }) => {
     await contract.createPoll(image, title, description, startsAt, endsAt, {
       from: connectedAccount,
     })
+    await getPolls()
   } catch (error) {
     reportError(error)
   }
@@ -76,6 +77,7 @@ const registerUser = async ({ fullname, image }) => {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
     await contract.register(image, fullname, { from: connectedAccount })
+    await getUser()
   } catch (error) {
     reportError(error)
   }
@@ -121,8 +123,8 @@ const structuredPolls = (polls) =>
       id: Number(poll.id),
       status: Number(poll.status),
       votes: Number(poll.votes),
-      startsAt: toDate(poll.startsAt.toNumber() * 1000),
-      endsAt: toDate(poll.endsAt.toNumber() * 1000),
+      startsAt: poll.startsAt,
+      endsAt: poll.endsAt,
       contestants: Number(poll.contestants),
       director: poll.director,
       image: poll.image,

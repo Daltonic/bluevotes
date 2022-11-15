@@ -1,5 +1,6 @@
+import Moment from 'react-moment'
 import { useNavigate } from 'react-router-dom'
-import { daysRemaining } from '../store'
+import { daysRemaining, truncate } from '../store'
 
 const Polls = ({ polls }) => {
   return (
@@ -36,18 +37,29 @@ const Poll = ({ poll }) => {
     <div className="flex justify-center">
       <div className="rounded-lg shadow-lg bg-white max-w-sm">
         <img
-          className="rounded-t-lg w-full"
+          className="rounded-t-lg object-cover h-48 w-full"
           src={poll.image}
           alt={poll.title}
         />
         <div className="p-6">
-          <h5 className="text-gray-900 text-xl font-medium mb-2">
+          <h5 className="text-gray-900 text-xl font-medium">
             {poll.title}
           </h5>
-          <small className="font-semibold">
-            Starts on: <span className="text-red-700 ">{poll.startsAt}</span>
+          <small className="font-bold mb-4 text-xs">
+            {new Date().getTime() > Number(poll.startsAt + '000') &&
+            Number(poll.endsAt + '000') > Number(poll.startsAt + '000') ? (
+              <span className="text-green-700">Started</span>
+            ) : new Date().getTime() > Number(poll.endsAt + '000') ? (
+              <Moment className="text-red-700" unix format="ddd DD MMM, YYYY">
+                {poll.endsAt}
+              </Moment>
+            ) : (
+              <Moment className="text-gray-500" unix format="ddd DD MMM, YYYY">
+                {poll.startsAt}
+              </Moment>
+            )}
           </small>
-          <p className="text-gray-700 text-base mb-4">{poll.description}</p>
+          <p className="text-gray-700 text-base mb-4">{truncate(poll.description, 100, 0, 103)}</p>
           <button
             type="button"
             className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs
