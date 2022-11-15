@@ -7,7 +7,8 @@ const { getGlobalState, useGlobalState, setGlobalState } = createGlobalState({
   connectedAccount: '',
   user: null,
   polls: [],
-  poll: null
+  poll: null,
+  contestants: [],
 })
 
 const truncate = (text, startChars, endChars, maxLength) => {

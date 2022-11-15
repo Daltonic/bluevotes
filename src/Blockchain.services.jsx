@@ -117,6 +117,29 @@ const getPoll = async (id) => {
   }
 }
 
+const contest = async (id) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = getEtheriumContract()
+    await contract.contest(id, { from: connectedAccount })
+    await getPoll(id)
+  } catch (error) {
+    reportError(error)
+  }
+}
+
+const listContestants = async (id) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const contract = getEtheriumContract()
+    const contestants = await contract.listContestants(id)
+    setGlobalState('contestants', structuredContestants(contestants))
+  } catch (error) {
+    reportError(error)
+  }
+}
+
 const structuredPolls = (polls) =>
   polls
     .map((poll) => ({
@@ -134,14 +157,17 @@ const structuredPolls = (polls) =>
     }))
     .reverse()
 
-const toDate = (timestamp) => {
-  const date = new Date(timestamp)
-  const dd = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`
-  const mm =
-    date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`
-  const yyyy = date.getFullYear()
-  return `${yyyy}-${mm}-${dd}`
-}
+const structuredContestants = (contestants) =>
+  contestants
+    .map((contestant) => ({
+      id: Number(contestant.id),
+      fullname: contestant.fullname,
+      image: contestant.image,
+      voter: contestant.voter,
+      voters: contestant.voters,
+      votes: Number(contestant.votes),
+    }))
+    .reverse()
 
 const reportError = (error) => {
   console.log(error.message)
@@ -155,5 +181,7 @@ export {
   getUser,
   createPoll,
   getPolls,
-  getPoll
+  getPoll,
+  contest,
+  listContestants,
 }
