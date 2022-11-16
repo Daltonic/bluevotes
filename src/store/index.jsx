@@ -4,6 +4,7 @@ import moment from 'moment'
 const { getGlobalState, useGlobalState, setGlobalState } = createGlobalState({
   contestModal: 'scale-0',
   createPollModal: 'scale-0',
+  updatePollModal: 'scale-0',
   connectedAccount: '',
   user: null,
   polls: [],
@@ -23,6 +24,15 @@ const truncate = (text, startChars, endChars, maxLength) => {
   return text
 }
 
+const toDate = (timestamp) => {
+  const date = new Date(timestamp)
+  const dd = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`
+  const mm =
+    date.getMonth() + 1 > 9 ? date.getMonth() + 1 : `0${date.getMonth() + 1}`
+  const yyyy = date.getFullYear()
+  return `${yyyy}-${mm}-${dd}`
+}
+
 const daysRemaining = (days) => {
   const todaysdate = moment()
   days = Number((days + '000').slice(0))
@@ -37,5 +47,5 @@ export {
   useGlobalState,
   setGlobalState,
   truncate,
-  daysRemaining,
+  toDate,
 }

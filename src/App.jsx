@@ -5,6 +5,7 @@ import CreatePoll from './components/CreatePoll'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Register from './components/Register'
+import UpdatePoll from './components/UpdatePoll'
 
 import Home from './views/Home'
 import Vote from './views/Vote'
@@ -31,6 +32,7 @@ const App = () => {
 
       <Register />
       <CreatePoll />
+      <UpdatePoll />
       <Footer />
     </div>
   ) : null

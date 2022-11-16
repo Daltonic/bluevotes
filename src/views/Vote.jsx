@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { getPoll, contest, listContestants } from '../Blockchain.services'
-import { useGlobalState, truncate } from '../store'
+import { useGlobalState, setGlobalState, truncate } from '../store'
 import Moment from 'react-moment'
 import Identicon from 'react-identicons'
 
@@ -45,7 +45,7 @@ const Vote = () => {
             className="h-10 w-10 object-contain rounded-full"
           />
           <span className="font-bold">
-            {truncate(poll?.director, 4, 4, 11)}
+            {poll?.director ? truncate(poll?.director, 4, 4, 11) : '...'}
           </span>
         </div>
 
@@ -66,6 +66,7 @@ const Vote = () => {
                 className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
                 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
                 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                onClick={() => setGlobalState('updatePollModal', 'scale-100')}
               >
                 Edit
               </button>
@@ -106,6 +107,7 @@ const Votee = ({ contestant, poll }) => (
       <p className="text-gray-700 text-base font-bold">
         {contestant?.fullname}
       </p>
+
       <div className="flex justify-start items-center space-x-2 text-sm my-2">
         <Identicon
           string={contestant?.voter}
@@ -116,6 +118,7 @@ const Votee = ({ contestant, poll }) => (
           {truncate(contestant?.voter, 4, 4, 11)}
         </span>
       </div>
+
       <div className="flex justify-start items-center">
         <span className="text-gray-600 text-sm">{contestant?.votes} votes</span>
         {new Date().getTime() > Number(poll?.startsAt + '000') ? (
