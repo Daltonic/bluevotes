@@ -149,7 +149,7 @@ const structuredPolls = (polls) =>
       startsAt: poll.startsAt,
       endsAt: poll.endsAt,
       contestants: Number(poll.contestants),
-      director: poll.director,
+      director: poll.director.toLowerCase(),
       image: poll.image,
       title: poll.title,
       description: poll.description,
@@ -163,7 +163,7 @@ const structuredContestants = (contestants) =>
       id: Number(contestant.id),
       fullname: contestant.fullname,
       image: contestant.image,
-      voter: contestant.voter,
+      voter: contestant.voter.toLowerCase(),
       voters: contestant.voters,
       votes: Number(contestant.votes),
     }))

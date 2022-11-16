@@ -1,6 +1,6 @@
 import Moment from 'react-moment'
 import { useNavigate } from 'react-router-dom'
-import { daysRemaining, truncate } from '../store'
+import { truncate } from '../store'
 
 const Polls = ({ polls }) => {
   return (
