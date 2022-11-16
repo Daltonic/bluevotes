@@ -89,12 +89,14 @@ describe('BlueVotes', () => {
       await contract.contest(id, {
         from: director.address,
       })
+      
+      await contract.connect(voter).contest(id)
 
       result = await contract.listContestants(id)
-      expect(result).to.have.lengthOf(1)
+      expect(result).to.have.lengthOf(2)
 
       result = await contract.getPoll(id)
-      expect(result.contestants).to.equal(1)
+      expect(result.contestants).to.equal(2)
     })
     
     it('Should confirm ability to vote', async () => {

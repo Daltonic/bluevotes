@@ -33,6 +33,7 @@ contract BlueVotes {
     }
 
     uint totalPolls;
+    uint activePolls;
     uint totalUsers;
     
     mapping(uint => PollStruct) polls;
@@ -78,6 +79,7 @@ contract BlueVotes {
 
         polls[poll.id] = poll;
         pollExist[poll.id] = true;
+        activePolls++;
     }
 
     function updatePoll(
@@ -107,6 +109,7 @@ contract BlueVotes {
         require(pollExist[id], "Poll not found");
         require(polls[id].director == msg.sender, "Unauthorized entity");
         polls[id].status = PollStatus.DELETED;
+        activePolls--;
     }
 
     function getPoll(uint id) public view returns (PollStruct memory) {
@@ -114,8 +117,8 @@ contract BlueVotes {
     }
 
     function getPolls() public view returns (PollStruct[] memory Polls) {
-        Polls = new PollStruct[](totalPolls);
-        for(uint i = 0; i < totalPolls; i++) {
+        Polls = new PollStruct[](activePolls);
+        for(uint i = 0; i < activePolls; i++) {
              if(polls[i].status != PollStatus.DELETED){
                  Polls[i] = polls[i];
              }

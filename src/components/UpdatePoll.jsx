@@ -1,7 +1,7 @@
 import { setGlobalState, useGlobalState, toDate } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
-import { createPoll } from '../Blockchain.services'
+import { updatePoll } from '../Blockchain.services'
 
 const UpdatePoll = () => {
   const [updatePollModal] = useGlobalState('updatePollModal')
@@ -35,6 +35,7 @@ const UpdatePoll = () => {
     if (!title || !image || !startsAt || !endsAt || !description) return
 
     const params = {
+      id: poll?.id,
       title,
       image,
       startsAt: toTimestamp(startsAt),
@@ -42,17 +43,8 @@ const UpdatePoll = () => {
       description,
     }
 
-    await createPoll(params)
+    await updatePoll(params)
     closeModal()
-    resetForm()
-  }
-
-  const resetForm = () => {
-    setTitle('')
-    setImage('')
-    setDescription('')
-    setStartsAt('')
-    setEndsAt('')
   }
 
   return (

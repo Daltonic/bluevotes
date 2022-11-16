@@ -8,6 +8,7 @@ import Identicon from 'react-identicons'
 const Vote = () => {
   const { id } = useParams()
   const [poll] = useGlobalState('poll')
+  const [connectedAccount] = useGlobalState('connectedAccount')
   const [contestants] = useGlobalState('contestants')
 
   const handleContest = async () => {
@@ -61,25 +62,33 @@ const Vote = () => {
               >
                 Contest
               </button>
-              <button
-                type="button"
-                className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
-                font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
-                focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                onClick={() => setGlobalState('updatePollModal', 'scale-100')}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="inline-block px-6 py-2 border-2 border-red-600 text-red-600
-                font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
-                focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-              >
-                Delete
-              </button>
             </div>
           )}
+          
+          {connectedAccount == poll?.director ? (
+            <div className="flex space-x-2">
+              <>
+                <button
+                  type="button"
+                  className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
+                    font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
+                    focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                  onClick={() => setGlobalState('updatePollModal', 'scale-100')}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="inline-block px-6 py-2 border-2 border-red-600 text-red-600
+                    font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
+                    focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                  onClick={() => setGlobalState('deletePollModal', 'scale-100')}
+                >
+                  Delete
+                </button>
+              </>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -94,7 +103,7 @@ const Vote = () => {
 }
 
 const Votee = ({ contestant, poll }) => (
-  <div className="flex justify-start w-full md:w-3/5 mx-auto rounded-lg bg-white shadow-lg">
+  <div className="flex justify-start w-full md:w-3/5 mx-auto rounded-lg bg-white shadow-lg my-2">
     <div>
       <img
         className="w-40 h-full object-cover rounded-lg md:rounded-none"

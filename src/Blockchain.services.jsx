@@ -71,6 +71,40 @@ const createPoll = async ({ title, image, startsAt, endsAt, description }) => {
   }
 }
 
+const updatePoll = async ({
+  id,
+  title,
+  image,
+  startsAt,
+  endsAt,
+  description,
+}) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = getEtheriumContract()
+    await contract.updatePoll(id, image, title, description, startsAt, endsAt, {
+      from: connectedAccount,
+    })
+    await getPolls()
+  } catch (error) {
+    reportError(error)
+  }
+}
+
+const deletePoll = async (id) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = getEtheriumContract()
+    await contract.deletePoll(id, {
+      from: connectedAccount,
+    })
+  } catch (error) {
+    reportError(error)
+  }
+}
+
 const registerUser = async ({ fullname, image }) => {
   try {
     if (!ethereum) return alert('Please install Metamask')
@@ -180,6 +214,8 @@ export {
   registerUser,
   getUser,
   createPoll,
+  updatePoll,
+  deletePoll,
   getPolls,
   getPoll,
   contest,

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { getPolls, getUser, isWallectConnected } from './Blockchain.services'
 import CreatePoll from './components/CreatePoll'
+import DeletePoll from './components/DeletePoll'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Register from './components/Register'
@@ -31,6 +32,7 @@ const App = () => {
       </Routes>
 
       <Register />
+      <DeletePoll />
       <CreatePoll />
       <UpdatePoll />
       <Footer />
