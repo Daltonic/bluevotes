@@ -191,14 +191,14 @@ const structuredPolls = (polls) =>
   polls
     .map((poll) => ({
       id: Number(poll.id),
-      status: Number(poll.status),
+      title: poll.title,
       votes: Number(poll.votes),
       startsAt: poll.startsAt,
       endsAt: poll.endsAt,
       contestants: Number(poll.contestants),
       director: poll.director.toLowerCase(),
       image: poll.image,
-      title: poll.title,
+      deleted: poll.deleted,
       description: poll.description,
       timestamp: new Date(poll.timestamp.toNumber()).getTime(),
     }))

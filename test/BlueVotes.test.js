@@ -61,7 +61,7 @@ describe('BlueVotes', () => {
 
     it('Should confirm poll delete', async () => {
       result = await contract.getPoll(id)
-      expect(result.status).to.equal(OPEN)
+      expect(result.deleted).to.equal(false)
 
       await contract.deletePoll(result.id, {
         from: director.address,
@@ -69,7 +69,7 @@ describe('BlueVotes', () => {
 
       result = await contract.getPoll(id)
       result = await contract.getPoll(id)
-      expect(result.status).to.equal(DELETED)
+      expect(result.deleted).to.equal(true)
     })
   })
 

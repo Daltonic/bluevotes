@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div>
       <Hero />
-      <Polls polls={polls} />
+      <Polls polls={polls.filter((poll) => !poll.deleted)} />
     </div>
   )
 }

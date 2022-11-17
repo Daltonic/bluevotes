@@ -1,8 +1,21 @@
+import { useEffect, useState } from 'react'
 import Moment from 'react-moment'
 import { useNavigate } from 'react-router-dom'
 import { truncate } from '../store'
 
 const Polls = ({ polls }) => {
+  const [end, setEnd] = useState(4)
+  const [count] = useState(4)
+  const [collection, setCollection] = useState([])
+
+  const getCollection = () => {
+    return polls.slice(0, end)
+  }
+
+  useEffect(() => {
+    setCollection(getCollection())
+  }, [polls, end])
+
   return (
     <div className="pt-10">
       <div
@@ -10,22 +23,25 @@ const Polls = ({ polls }) => {
         xl:grid-cols-4 gap-6 md:gap-4 lg:gap-4 xl:gap-3 py-2.5 w-4/5
         mx-auto"
       >
-        {polls.map((poll, i) => (
-          <Poll key={i} poll={poll} />
-        ))}
+        {collection.map((poll, i) =>
+          poll?.deleted ? null : <Poll key={i} poll={poll} />,
+        )}
       </div>
 
-      <div className=" flex justify-center mt-20">
-        <button
-          type="button"
-          className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs
-          leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
-          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800
-          active:shadow-lg transition duration-150 ease-in-out"
-        >
-          Load More
-        </button>
-      </div>
+      {collection.length > 0 && polls.length > collection.length ? (
+        <div className=" flex justify-center mt-20">
+          <button
+            type="button"
+            className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs
+            leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
+            focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800
+            active:shadow-lg transition duration-150 ease-in-out"
+            onClick={() => setEnd(end + count)}
+          >
+            Load More
+          </button>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -42,9 +58,7 @@ const Poll = ({ poll }) => {
           alt={poll.title}
         />
         <div className="p-6">
-          <h5 className="text-gray-900 text-xl font-medium">
-            {poll.title}
-          </h5>
+          <h5 className="text-gray-900 text-xl font-medium">{poll.title}</h5>
           <small className="font-bold mb-4 text-xs">
             {new Date().getTime() > Number(poll.startsAt + '000') &&
             Number(poll.endsAt + '000') > Number(poll.startsAt + '000') ? (
@@ -59,7 +73,9 @@ const Poll = ({ poll }) => {
               </Moment>
             )}
           </small>
-          <p className="text-gray-700 text-base mb-4">{truncate(poll.description, 100, 0, 103)}</p>
+          <p className="text-gray-700 text-base mb-4">
+            {truncate(poll.description, 100, 0, 103)}
+          </p>
           <button
             type="button"
             className=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs

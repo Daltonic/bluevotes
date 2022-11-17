@@ -72,7 +72,8 @@ const Vote = () => {
         </div>
 
         <div className="flex justify-center my-3">
-          {new Date().getTime() > Number(poll?.startsAt + '000') ? null : (
+          {new Date().getTime() >
+          Number(poll?.startsAt + '000') ? null : poll?.deleted ? null : (
             <div className="flex space-x-2">
               <button
                 type="button"
