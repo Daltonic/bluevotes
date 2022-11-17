@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/daltonic/Sites/dapps/bluevotes/src/contracts/BlueVotes.sol": {
-      "lastModificationDate": 1668603793911,
-      "contentHash": "50a15c59f7caa8e07c0e07fad0c65781",
+      "lastModificationDate": 1668677824590,
+      "contentHash": "f5943edfa5e8b8abfa54f40193aeb124",
       "sourceName": "src/contracts/BlueVotes.sol",
       "solcConfig": {
         "version": "0.8.11",
