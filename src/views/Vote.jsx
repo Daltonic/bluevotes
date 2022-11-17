@@ -4,6 +4,7 @@ import { getPoll, contest, listContestants, vote } from '../Blockchain.services'
 import { useGlobalState, setGlobalState, truncate } from '../store'
 import Moment from 'react-moment'
 import Identicon from 'react-identicons'
+import { toast } from 'react-toastify'
 
 const Vote = () => {
   const { id } = useParams()
@@ -12,8 +13,18 @@ const Vote = () => {
   const [contestants] = useGlobalState('contestants')
 
   const handleContest = async () => {
-    await contest(id)
-    console.log('Contested')
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await contest(id)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Contested, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
   }
 
   useEffect(async () => {
@@ -24,6 +35,11 @@ const Vote = () => {
   return (
     <div className="w-full md:w-4/5 mx-auto p-4">
       <div className="text-center my-5">
+        <img
+          className="w-full h-40 object-cover mb-4"
+          src={poll?.image}
+          alt={poll?.title}
+        />
         <h1 className="text-5xl text-black-600 font-bold">{poll?.title}</h1>
         <p className="pt-5 text-gray-600 text-xl font-medium">
           {poll?.description}
@@ -67,33 +83,35 @@ const Vote = () => {
               >
                 Contest
               </button>
+
+              {connectedAccount == poll?.director ? (
+                <>
+                  <button
+                    type="button"
+                    className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
+                 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
+                 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                    onClick={() =>
+                      setGlobalState('updatePollModal', 'scale-100')
+                    }
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-block px-6 py-2 border-2 border-red-600 text-red-600
+                 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
+                 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                    onClick={() =>
+                      setGlobalState('deletePollModal', 'scale-100')
+                    }
+                  >
+                    Delete
+                  </button>
+                </>
+              ) : null}
             </div>
           )}
-
-          {connectedAccount == poll?.director ? (
-            <div className="flex space-x-2">
-              <>
-                <button
-                  type="button"
-                  className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
-                    font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
-                    focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                  onClick={() => setGlobalState('updatePollModal', 'scale-100')}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="inline-block px-6 py-2 border-2 border-red-600 text-red-600
-                    font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
-                    focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                  onClick={() => setGlobalState('deletePollModal', 'scale-100')}
-                >
-                  Delete
-                </button>
-              </>
-            </div>
-          ) : null}
         </div>
       </div>
 
@@ -113,10 +131,19 @@ const Vote = () => {
 }
 
 const Votee = ({ contestant, poll }) => {
-  const [connectedAccount] = useGlobalState('connectedAccount')
   const handleVote = async (id, cid) => {
-    await vote(id, cid)
-    console.log('Voted successfully')
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await vote(id, cid)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Voted, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
   }
 
   return (
@@ -149,10 +176,11 @@ const Votee = ({ contestant, poll }) => {
           <span className="text-gray-600 text-sm">
             {contestant?.votes} votes
           </span>
-          {new Date().getTime() > Number(poll?.startsAt + '000') ? (
+          {new Date().getTime() > Number(poll?.startsAt + '000') &&
+          Number(poll?.endsAt + '000') > new Date().getTime() ? (
             <button
               type="button"
-              className="inline-block px-6 py-2 border-2 border-gray-800 text-gray-800
+              className="inline-block px-3 py-1 border-2 border-gray-800 text-gray-800
                   font-medium text-xs leading-tight uppercase rounded-full hover:bg-black
                   hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150
                   ease-in-out ml-8"

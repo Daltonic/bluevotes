@@ -1,5 +1,6 @@
 import { FaTimes } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { deletePoll } from '../Blockchain.services'
 import { setGlobalState, useGlobalState } from '../store'
 
@@ -11,7 +12,19 @@ const DeletePoll = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    await deletePoll(poll.id)
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await deletePoll(poll.id)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Deleted, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
+
     setGlobalState('deletePollModal', 'scale-0')
     console.log('Poll Deleted!')
     navigate('/')

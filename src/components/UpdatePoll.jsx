@@ -2,6 +2,7 @@ import { setGlobalState, useGlobalState, toDate } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import { updatePoll } from '../Blockchain.services'
+import { toast } from 'react-toastify'
 
 const UpdatePoll = () => {
   const [updatePollModal] = useGlobalState('updatePollModal')
@@ -43,7 +44,18 @@ const UpdatePoll = () => {
       description,
     }
 
-    await updatePoll(params)
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await updatePoll(params)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Updated, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
     closeModal()
   }
 

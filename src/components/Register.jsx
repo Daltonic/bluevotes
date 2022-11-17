@@ -2,6 +2,7 @@ import { setGlobalState, useGlobalState } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import { useState } from 'react'
 import { registerUser } from '../Blockchain.services'
+import { toast } from 'react-toastify'
 
 const Register = () => {
   const [contestModal] = useGlobalState('contestModal')
@@ -22,8 +23,18 @@ const Register = () => {
       image,
     }
 
-    await registerUser(params)
-    console.log('User Registered')
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await registerUser(params)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Registered, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
     resetForm()
     closeModal()
   }

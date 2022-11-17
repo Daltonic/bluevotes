@@ -2,6 +2,7 @@ import { setGlobalState, useGlobalState } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import { useState } from 'react'
 import { createPoll } from '../Blockchain.services'
+import { toast } from 'react-toastify'
 
 const CreatePoll = () => {
   const [createPollModal] = useGlobalState('createPollModal')
@@ -33,7 +34,18 @@ const CreatePoll = () => {
       description,
     }
 
-    await createPoll(params)
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await createPoll(params)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Created, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
     closeModal()
     resetForm()
   }

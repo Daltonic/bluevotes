@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { getPolls, getUser, isWallectConnected } from './Blockchain.services'
+import { ToastContainer } from 'react-toastify'
 import CreatePoll from './components/CreatePoll'
 import DeletePoll from './components/DeletePoll'
 import Footer from './components/Footer'
@@ -36,6 +37,18 @@ const App = () => {
       <CreatePoll />
       <UpdatePoll />
       <Footer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
   ) : null
 }

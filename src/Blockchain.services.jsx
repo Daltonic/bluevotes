@@ -214,9 +214,7 @@ const structuredContestants = (contestants, connectedAccount) =>
       voters: contestant.voters.map((v) => v.toLowerCase()),
       votes: Number(contestant.votes),
     }))
-    .sort(function(a, b) {
-      return b.votes - a.votes;
-    })
+    .sort((a, b) => b.votes - a.votes)
 
 const reportError = (error) => {
   console.log(error.message)
