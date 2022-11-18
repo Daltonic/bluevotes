@@ -17,16 +17,28 @@ const Hero = () => {
       </p>
       <div className="flex justify-center pt-10">
         {user?.fullname ? (
-          <button
-            type="button"
-            className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs
-            leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
-            focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800
-            active:shadow-lg transition duration-150 ease-in-out"
-            onClick={() => setGlobalState('createPollModal', 'scale-100')}
-          >
-            Create Poll
-          </button>
+          <div className='space-x-2'>
+            <button
+              type="button"
+              className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs
+              leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg
+              focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800
+              active:shadow-lg transition duration-150 ease-in-out border border-blue-600"
+              onClick={() => setGlobalState('createPollModal', 'scale-100')}
+            >
+              Create Poll
+            </button>
+            
+            <button
+              type="button"
+              className="inline-block px-6 py-2.5 bg-transparent text-blue-600 font-medium text-xs
+              leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg hover:text-white
+              focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800
+              active:shadow-lg transition duration-150 ease-in-out border border-blue-600"
+            >
+              Login
+            </button>
+          </div>
         ) : (
           <button
             type="button"

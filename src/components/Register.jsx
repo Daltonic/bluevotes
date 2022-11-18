@@ -3,6 +3,7 @@ import { FaTimes } from 'react-icons/fa'
 import { useState } from 'react'
 import { registerUser } from '../Blockchain.services'
 import { toast } from 'react-toastify'
+import { logOutWithCometChat, signUpWithCometChat } from '../Chat.services'
 
 const Register = () => {
   const [contestModal] = useGlobalState('contestModal')
@@ -23,20 +24,22 @@ const Register = () => {
       image,
     }
 
-    await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await registerUser(params)
-          .then(() => resolve())
-          .catch(() => reject())
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Registered, will reflect within 30sec 👌',
-        error: 'Encountered error 🤯',
-      },
-    )
-    resetForm()
-    closeModal()
+    await signUpWithCometChat(fullname).then(async () => {
+      await toast.promise(
+        new Promise(async (resolve, reject) => {
+          await registerUser(params)
+            .then(() => resolve())
+            .catch(() => reject())
+        }),
+        {
+          pending: 'Approve transaction...',
+          success: 'Registered, will reflect within 30sec 👌',
+          error: 'Encountered error 🤯',
+        },
+      )
+      resetForm()
+      closeModal()
+    })
   }
 
   const resetForm = () => {

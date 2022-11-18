@@ -30,16 +30,15 @@ const loginWithCometChat = async () => {
     .catch((error) => alert(JSON.stringify(error)))
 }
 
-const signInWithCometChat = async () => {
+const signUpWithCometChat = async (name) => {
   const authKey = CONSTANTS.Auth_Key
   const UID = getGlobalState('connectedAccount')
   const user = new CometChat.User(UID)
 
-  user.setName(UID)
-
-  await CometChat.createUser(user, authKey)
-    .then((user) => console.log('currentUser', user))
-    .catch((error) => console.log(error))
+  user.setName(name)
+  return await CometChat.createUser(user, authKey)
+    .then((user) => user)
+    .catch((error) => error)
 }
 
 const logOutWithCometChat = async () => {
@@ -100,7 +99,7 @@ const sendMessage = async (receiverID, messageText) => {
   const textMessage = new CometChat.TextMessage(
     receiverID,
     messageText,
-    receiverType
+    receiverType,
   )
 
   return await CometChat.sendMessage(textMessage)
@@ -111,7 +110,7 @@ const sendMessage = async (receiverID, messageText) => {
 export {
   initCometChat,
   loginWithCometChat,
-  signInWithCometChat,
+  signUpWithCometChat,
   logOutWithCometChat,
   getMessages,
   sendMessage,
@@ -119,5 +118,5 @@ export {
   createNewGroup,
   getGroup,
   joinGroup,
-  CometChat
+  CometChat,
 }
