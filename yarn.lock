@@ -1079,6 +1079,11 @@
   resolved "https://registry.yarnpkg.com/@chainsafe/is-ip/-/is-ip-2.0.1.tgz#62cb285669d91f88fd9fa285048dde3882f0993b"
   integrity sha512-nqSJ8u2a1Rv9FYbyI8qpDhTYujaKEyLknNrTejLYoSWmdeg+2WB7R6BZqPZYfrJzDxVi3rl6ZQuoaEvpKRZWgQ==
 
+"@cometchat-pro/chat@^3.0.10":
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/@cometchat-pro/chat/-/chat-3.0.10.tgz#409f85b03d4de29a1ed7623aaba493e135ecbf72"
+  integrity sha512-krbu27SPRKQXMGoamy9tOJMkRAtlJqIpsoZIy5//F6p4tON6XUVDzk8X8UhFXAqTMqEXzCnUPFKS9kyQBH80pg==
+
 "@csstools/normalize.css@*":
   version "12.0.0"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.0.0.tgz#a9583a75c3f150667771f30b60d9f059473e62c4"
