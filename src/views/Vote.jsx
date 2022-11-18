@@ -5,6 +5,7 @@ import { useGlobalState, setGlobalState, truncate } from '../store'
 import Moment from 'react-moment'
 import Identicon from 'react-identicons'
 import { toast } from 'react-toastify'
+import Messages from '../components/Messages'
 
 const Vote = () => {
   const { id } = useParams()
@@ -127,6 +128,11 @@ const Vote = () => {
           <Votee key={i} contestant={contestant} poll={poll} />
         ))}
       </div>
+
+      <div className="flex flex-col items-center">
+        <h4 className="text-lg font-medium uppercase mt-6 mb-3">Live Chats</h4>
+        <Messages />
+      </div>
     </div>
   )
 }
@@ -148,7 +154,7 @@ const Votee = ({ contestant, poll }) => {
   }
 
   return (
-    <div className="flex justify-start w-full md:w-3/5 mx-auto rounded-lg bg-white shadow-lg my-2">
+    <div className="flex justify-start w-full mx-auto rounded-lg bg-white shadow-lg my-2">
       <div>
         <img
           className="w-40 h-full object-cover rounded-lg md:rounded-none"

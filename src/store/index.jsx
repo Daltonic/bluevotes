@@ -34,13 +34,12 @@ const toDate = (timestamp) => {
   return `${yyyy}-${mm}-${dd}`
 }
 
-const daysRemaining = (days) => {
-  const todaysdate = moment()
-  days = Number((days + '000').slice(0))
-  days = moment(days).format('YYYY-MM-DD')
-  days = moment(days)
-  days = days.diff(todaysdate, 'days')
-  return days == 1 ? '1 day' : days + ' days'
+const toHex = (str) => {
+  let result = ''
+  for (let i = 0; i < str.length; i++) {
+    result += str.charCodeAt(i).toString(16)
+  }
+  return result.slice(0, 6)
 }
 
 export {
@@ -49,4 +48,5 @@ export {
   setGlobalState,
   truncate,
   toDate,
+  toHex,
 }
