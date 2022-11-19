@@ -44,8 +44,8 @@ const Footer = () => {
           className="flex space-x-2 text-whitehite"
           href="https://tailwind-elements.com/"
         >
-          <span>KELzzz</span>
-          <span className="text-orange-700">Codes</span>
+          <span>With Love ❤️</span>
+          <span className="text-orange-700">Daltonic</span>
         </a>
       </div>
     </footer>

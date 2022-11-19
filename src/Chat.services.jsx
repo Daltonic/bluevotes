@@ -27,7 +27,7 @@ const loginWithCometChat = async () => {
 
   await CometChat.login(UID, authKey)
     .then((user) => setGlobalState('currentUser', user))
-    .catch((error) => alert(JSON.stringify(error)))
+    .catch((error) => console.log(JSON.stringify(error)))
 }
 
 const signUpWithCometChat = async (name) => {

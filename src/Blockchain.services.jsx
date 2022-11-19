@@ -25,6 +25,7 @@ const isWallectConnected = async () => {
   try {
     if (!ethereum) return alert('Please install Metamask')
     const accounts = await ethereum.request({ method: 'eth_accounts' })
+    setGlobalState('connectedAccount', accounts[0].toLowerCase())
 
     window.ethereum.on('chainChanged', (chainId) => {
       window.location.reload()

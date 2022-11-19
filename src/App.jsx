@@ -13,18 +13,14 @@ import Home from './views/Home'
 import Vote from './views/Vote'
 
 const App = () => {
-  const [loaded, setLoaded] = useState(false)
-
   useEffect(async () => {
-    await isWallectConnected().then(async () => {
-      console.log('Blockchain loaded')
-      await getPolls()
-      await getUser()
-      setLoaded(true)
-    })
+    await isWallectConnected()
+    await getPolls()
+    await getUser()
+    console.log('Blockchain loaded')
   }, [])
 
-  return loaded ? (
+  return (
     <div className="min-h-screen">
       <Header />
       <Routes>
@@ -50,7 +46,7 @@ const App = () => {
         theme="dark"
       />
     </div>
-  ) : null
+  )
 }
 
 export default App
