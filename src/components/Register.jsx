@@ -32,7 +32,7 @@ const Register = () => {
             .catch(() => reject())
         }),
         {
-          pending: 'Approve transaction...',
+          pending: 'Registering...',
           success: 'Registered, will reflect within 30sec 👌',
           error: 'Encountered error 🤯',
         },

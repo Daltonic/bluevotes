@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { getPolls, getUser, isWallectConnected } from './Blockchain.services'
 import { ToastContainer } from 'react-toastify'

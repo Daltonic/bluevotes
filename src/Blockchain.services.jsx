@@ -2,6 +2,7 @@ import abi from './abis/src/contracts/BlueVotes.sol/BlueVotes.json'
 import address from './abis/contractAddress.json'
 import { getGlobalState, setGlobalState } from './store'
 import { ethers } from 'ethers'
+import { logOutWithCometChat } from './Chat.services'
 
 const { ethereum } = window
 const contractAddress = address.address
@@ -25,20 +26,21 @@ const isWallectConnected = async () => {
   try {
     if (!ethereum) return alert('Please install Metamask')
     const accounts = await ethereum.request({ method: 'eth_accounts' })
-    setGlobalState('connectedAccount', accounts[0].toLowerCase())
+    setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
 
     window.ethereum.on('chainChanged', (chainId) => {
       window.location.reload()
     })
 
     window.ethereum.on('accountsChanged', async () => {
-      setGlobalState('connectedAccount', accounts[0].toLowerCase())
+      setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
       await isWallectConnected()
+      await logOutWithCometChat()
       await getUser()
     })
 
     if (accounts.length) {
-      setGlobalState('connectedAccount', accounts[0].toLowerCase())
+      setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
     } else {
       alert('Please connect wallet.')
       console.log('No accounts found.')
@@ -52,7 +54,7 @@ const connectWallet = async () => {
   try {
     if (!ethereum) return alert('Please install Metamask')
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
-    setGlobalState('connectedAccount', accounts[0].toLowerCase())
+    setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
   } catch (error) {
     reportError(error)
   }
@@ -197,7 +199,7 @@ const structuredPolls = (polls) =>
       startsAt: poll.startsAt,
       endsAt: poll.endsAt,
       contestants: Number(poll.contestants),
-      director: poll.director.toLowerCase(),
+      director: poll.director?.toLowerCase(),
       image: poll.image,
       deleted: poll.deleted,
       description: poll.description,
@@ -211,8 +213,8 @@ const structuredContestants = (contestants, connectedAccount) =>
       id: Number(contestant.id),
       fullname: contestant.fullname,
       image: contestant.image,
-      voter: contestant.voter.toLowerCase(),
-      voters: contestant.voters.map((v) => v.toLowerCase()),
+      voter: contestant.voter?.toLowerCase(),
+      voters: contestant.voters.map((v) => v?.toLowerCase()),
       votes: Number(contestant.votes),
     }))
     .sort((a, b) => b.votes - a.votes)
