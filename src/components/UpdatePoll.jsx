@@ -61,7 +61,7 @@ const UpdatePoll = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-screen h-screen flex items-center
+      className={`fixed top-0 left-0 w-screen h-screen flex items-center z-50
       justify-center bg-black bg-opacity-50 transform transition-transform
       duration-300 ${updatePollModal}`}
     >

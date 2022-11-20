@@ -62,14 +62,17 @@ const createNewGroup = async (GUID, groupName) => {
   const group = new CometChat.Group(GUID, groupName, groupType, password)
 
   await CometChat.createGroup(group)
-    .then((group) => getGroup(group.guid))
+    .then((group) => setGlobalState('group', group))
     .catch((error) => console.log(error))
 }
 
 const getGroup = async (GUID) => {
-  await CometChat.getGroup(GUID)
-    .then((group) => setGlobalState('group', group))
-    .catch((error) => console.log(error))
+  return await CometChat.getGroup(GUID)
+    .then((group) => {
+      setGlobalState('group', group)
+      return group
+    })
+    .catch((error) => error)
 }
 
 const joinGroup = async (GUID) => {

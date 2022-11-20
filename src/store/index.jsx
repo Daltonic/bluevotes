@@ -13,6 +13,7 @@ const { getGlobalState, useGlobalState, setGlobalState } = createGlobalState({
   polls: [],
   poll: null,
   contestants: [],
+  group: null
 })
 
 const truncate = (text, startChars, endChars, maxLength) => {

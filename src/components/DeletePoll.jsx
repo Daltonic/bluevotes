@@ -37,7 +37,7 @@ const DeletePoll = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center
-        justify-center bg-black bg-opacity-50 transform
+        justify-center bg-black bg-opacity-50 transform z-50
         transition-transform duration-300 ${deletePollModal}`}
     >
       <div className="bg-white shadow-xl shadow-black rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">

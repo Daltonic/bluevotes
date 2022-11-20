@@ -1,17 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { useParams } from 'react-router-dom'
 import { getPoll, contest, listContestants, vote } from '../Blockchain.services'
 import { useGlobalState, setGlobalState, truncate } from '../store'
 import Moment from 'react-moment'
 import Identicon from 'react-identicons'
-import { toast } from 'react-toastify'
 import Messages from '../components/Messages'
+import { createNewGroup, getGroup, joinGroup } from '../Chat.services'
 
 const Vote = () => {
   const { id } = useParams()
   const [poll] = useGlobalState('poll')
   const [connectedAccount] = useGlobalState('connectedAccount')
   const [contestants] = useGlobalState('contestants')
+  const [group, setGroup] = useState(null)
 
   const handleContest = async () => {
     await toast.promise(
@@ -31,6 +33,22 @@ const Vote = () => {
   useEffect(async () => {
     await getPoll(id)
     await listContestants(id)
+    await getGroup(`pid_${id}`).then(async (res) => {
+      if (
+        res.code &&
+        res.code == 'ERR_GUID_NOT_FOUND' &&
+        connectedAccount == poll?.director
+      ) {
+        await createNewGroup(`pid_${id}`, poll?.title)
+      } else if (!res.code && !res.hasJoined) {
+        await joinGroup(`pid_${id}`)
+        setGroup(res)
+      } else if (!res.code) {
+        setGroup(res)
+      }else {
+        console.log(res);
+      }
+    })
   }, [])
 
   return (
@@ -128,11 +146,14 @@ const Vote = () => {
           <Votee key={i} contestant={contestant} poll={poll} />
         ))}
       </div>
-
-      <div className="flex flex-col items-center">
-        <h4 className="text-lg font-medium uppercase mt-6 mb-3">Live Chats</h4>
-        <Messages />
-      </div>
+      {group ? (
+        <div className="flex flex-col items-center">
+          <h4 className="text-lg font-medium uppercase mt-6 mb-3">
+            Live Chats
+          </h4>
+          <Messages />
+        </div>
+      ) : null}
     </div>
   )
 }

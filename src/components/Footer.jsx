@@ -4,7 +4,7 @@ import { GrLinkedin } from 'react-icons/gr'
 
 const Footer = () => {
   return (
-    <footer className="fixed bottom-0 right-0 left-0 text-center bg-gray-900 text-white mt-20">
+    <footer className="text-center bg-gray-900 text-white mt-20">
       <div className="mx-auto space-x-3 p-4">
         <a
           href="#"

@@ -2,7 +2,7 @@ import abi from './abis/src/contracts/BlueVotes.sol/BlueVotes.json'
 import address from './abis/contractAddress.json'
 import { getGlobalState, setGlobalState } from './store'
 import { ethers } from 'ethers'
-import { logOutWithCometChat } from './Chat.services'
+import { checkAuthState, logOutWithCometChat } from './Chat.services'
 
 const { ethereum } = window
 const contractAddress = address.address
@@ -36,6 +36,7 @@ const isWallectConnected = async () => {
       setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
       await isWallectConnected()
       await logOutWithCometChat()
+      await checkAuthState()
       await getUser()
     })
 
