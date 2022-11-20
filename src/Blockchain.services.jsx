@@ -34,10 +34,11 @@ const isWallectConnected = async () => {
 
     window.ethereum.on('accountsChanged', async () => {
       setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
-      await isWallectConnected()
+      // await isWallectConnected()
       await logOutWithCometChat()
-      await checkAuthState()
-      await getUser()
+      // await checkAuthState()
+      // await getUser()
+      window.location.reload()
     })
 
     if (accounts.length) {

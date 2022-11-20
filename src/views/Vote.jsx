@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getPoll, contest, listContestants, vote } from '../Blockchain.services'
 import { useGlobalState, setGlobalState, truncate } from '../store'
 import Moment from 'react-moment'
@@ -10,8 +10,10 @@ import { createNewGroup, getGroup, joinGroup } from '../Chat.services'
 
 const Vote = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [poll] = useGlobalState('poll')
   const [connectedAccount] = useGlobalState('connectedAccount')
+  const [currentUser] = useGlobalState('currentUser')
   const [contestants] = useGlobalState('contestants')
   const [group, setGroup] = useState(null)
 
@@ -30,9 +32,7 @@ const Vote = () => {
     )
   }
 
-  useEffect(async () => {
-    await getPoll(id)
-    await listContestants(id)
+  const handleGroup = async () => {
     await getGroup(`pid_${id}`).then(async (res) => {
       if (
         res.code &&
@@ -45,10 +45,20 @@ const Vote = () => {
         setGroup(res)
       } else if (!res.code) {
         setGroup(res)
-      }else {
-        console.log(res);
+      } else {
+        console.log(res)
       }
     })
+  }
+
+  useEffect(async () => {
+    await getPoll(id)
+    await listContestants(id)
+    if (!currentUser) {
+      toast('Please, register and login in first...')
+      navigate('/')
+    }
+    await handleGroup()
   }, [])
 
   return (
@@ -135,25 +145,27 @@ const Vote = () => {
         </div>
       </div>
 
-      <div className="flex flex-col items-center">
-        {contestants.length > 0 ? (
-          <h4 className="text-lg font-medium uppercase mt-6 mb-3">
-            Contestants
-          </h4>
-        ) : null}
-
-        {contestants.map((contestant, i) => (
-          <Votee key={i} contestant={contestant} poll={poll} />
-        ))}
-      </div>
-      {group ? (
+      <div className="flex flex-col w-full lg:w-3/4 mx-auto">
         <div className="flex flex-col items-center">
-          <h4 className="text-lg font-medium uppercase mt-6 mb-3">
-            Live Chats
-          </h4>
-          <Messages />
+          {contestants.length > 0 ? (
+            <h4 className="text-lg font-medium uppercase mt-6 mb-3">
+              Contestants
+            </h4>
+          ) : null}
+
+          {contestants.map((contestant, i) => (
+            <Votee key={i} contestant={contestant} poll={poll} />
+          ))}
         </div>
-      ) : null}
+        {group ? (
+          <div className="flex flex-col items-center">
+            <h4 className="text-lg font-medium uppercase mt-6 mb-3">
+              Live Chats
+            </h4>
+            <Messages guid={`pid_${id}`} />
+          </div>
+        ) : null}
+      </div>
     </div>
   )
 }
