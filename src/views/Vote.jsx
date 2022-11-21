@@ -32,21 +32,28 @@ const Vote = () => {
     )
   }
 
+  const handCreateGroup = async () => {
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await createNewGroup(`pid_${id}`, poll?.title)
+          .then(() => resolve())
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Creating...',
+        success: 'Chat group successfully created. 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
+  }
+
   const handleGroup = async () => {
     await getGroup(`pid_${id}`).then(async (res) => {
-      if (
-        res.code &&
-        res.code == 'ERR_GUID_NOT_FOUND' &&
-        connectedAccount == poll?.director
-      ) {
-        await createNewGroup(`pid_${id}`, poll?.title)
-      } else if (!res.code && !res.hasJoined) {
+      if (!res.code && !res.hasJoined) {
         await joinGroup(`pid_${id}`)
         setGroup(res)
       } else if (!res.code) {
         setGroup(res)
-      } else {
-        console.log(res)
       }
     })
   }
@@ -116,6 +123,17 @@ const Vote = () => {
 
               {connectedAccount == poll?.director ? (
                 <>
+                  {!group ? (
+                    <button
+                      type="button"
+                      className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
+                      font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
+                      focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
+                      onClick={handCreateGroup}
+                    >
+                      Create Group
+                    </button>
+                  ) : null}
                   <button
                     type="button"
                     className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600

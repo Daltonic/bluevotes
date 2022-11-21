@@ -33,7 +33,6 @@ contract BlueVotes {
     mapping(uint =>  mapping(address => bool)) voted;
     mapping(uint =>  mapping(address => bool)) contested;
     mapping(uint =>  VoterStruct[]) contestantsIn;
-    mapping(address =>  bool) contestantExist;
     mapping(uint =>  bool) pollExist;
 
     event Voted (
@@ -128,14 +127,11 @@ contract BlueVotes {
 
         VoterStruct memory user = users[msg.sender];
 
-        if(!contestantExist[msg.sender]) {
-            contestantsIn[id].push(user);
-            contested[id][msg.sender] = true;
-            contestantExist[msg.sender] = true;
-            polls[id].contestants++;
-        }
+        contestantsIn[id].push(user);
+        contested[id][msg.sender] = true;
+        polls[id].contestants++;
     }
-
+    
     function listContestants(uint id) public view returns (VoterStruct[] memory) {
         require(pollExist[id], "Poll not found");
         return contestantsIn[id];
