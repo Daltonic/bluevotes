@@ -126,12 +126,11 @@ contract BlueVotes {
         require(!contested[id][msg.sender], "Already contested");
 
         VoterStruct memory user = users[msg.sender];
-
         contestantsIn[id].push(user);
         contested[id][msg.sender] = true;
         polls[id].contestants++;
     }
-    
+
     function listContestants(uint id) public view returns (VoterStruct[] memory) {
         require(pollExist[id], "Poll not found");
         return contestantsIn[id];

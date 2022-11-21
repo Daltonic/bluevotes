@@ -24,22 +24,24 @@ const Register = () => {
       image,
     }
 
-    await signUpWithCometChat(fullname).then(async () => {
-      await toast.promise(
-        new Promise(async (resolve, reject) => {
-          await registerUser(params)
-            .then(() => resolve())
-            .catch(() => reject())
-        }),
-        {
-          pending: 'Registering...',
-          success: 'Registered, will reflect within 30sec 👌',
-          error: 'Encountered error 🤯',
-        },
-      )
-      resetForm()
-      closeModal()
-    })
+    await toast.promise(
+      new Promise(async (resolve, reject) => {
+        await signUpWithCometChat(fullname)
+          .then(async () => {
+            await registerUser(params)
+              .then(() => resolve())
+              .catch(() => reject())
+          })
+          .catch(() => reject())
+      }),
+      {
+        pending: 'Registering...',
+        success: 'Registered, will reflect within 30sec 👌',
+        error: 'Encountered error 🤯',
+      },
+    )
+    resetForm()
+    closeModal()
   }
 
   const resetForm = () => {
