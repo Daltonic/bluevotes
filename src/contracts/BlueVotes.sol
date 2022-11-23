@@ -146,5 +146,11 @@ contract BlueVotes {
         contestantsIn[id][cid].votes++;
         contestantsIn[id][cid].voters.push(msg.sender);
         voted[id][msg.sender] = true;
+
+        emit Voted (
+            users[msg.sender].fullname,
+            msg.sender,
+            block.timestamp
+        );
     }
 }
