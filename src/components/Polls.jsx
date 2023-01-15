@@ -47,7 +47,15 @@ const Polls = ({ polls }) => {
 
 const Poll = ({ poll }) => {
   const navigate = useNavigate()
-
+  const convertTimestamp = (timestamp) => {
+    const date = new Date(timestamp)
+    const day = date.toLocaleString('en-us', { weekday: 'short' })
+    const month = date.toLocaleString('en-us', { month: 'short' })
+    const year = date.getFullYear()
+    const dayOfMonth = date.getDate()
+    return `${day} ${dayOfMonth} ${month}, ${year}`
+  }
+  
   return (
     <div className="flex justify-center">
       <div className="rounded-lg shadow-lg bg-white max-w-sm">
@@ -61,7 +69,7 @@ const Poll = ({ poll }) => {
           <small className="font-bold mb-4 text-xs">
             {Date.now() > poll.startsAt && poll.endsAt > poll.startsAt ? (
               <span className="text-green-700">Started</span>
-            ) : Date.noq() > poll.endsAt ? (
+            ) : Date.now() > poll.endsAt ? (
               <span className="text-red-700">
                 {convertTimestamp(poll?.endsAt)}
               </span>

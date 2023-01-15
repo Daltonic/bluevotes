@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { connectWallet } from '../Blockchain.services'
 import { truncate, useGlobalState } from '../store'
+import ConnectButton from './ConnectButton'
 
 const Header = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
@@ -11,7 +12,9 @@ const Header = () => {
         <span className="text-blue-700">Blue</span>Votes
       </Link>
 
-      {connectedAccount ? (
+      <ConnectButton />
+
+      {/* {connectedAccount ? (
         <button
           type="button"
           className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium
@@ -32,7 +35,7 @@ const Header = () => {
         >
           Connect Wallet
         </button>
-      )}
+      )} */}
     </div>
   )
 }

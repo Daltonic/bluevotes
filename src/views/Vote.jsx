@@ -78,46 +78,40 @@ const Vote = () => {
         </div>
 
         <div className="flex justify-center my-3">
-          {Date.now < poll?.startsAt ? (
-            <div className="flex space-x-2">
-              <button
-                type="button"
-                className="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600
+          <div className="flex space-x-2">
+            <button
+              type="button"
+              className="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600
                 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
                 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                onClick={handleContest}
-              >
-                Contest
-              </button>
+              onClick={handleContest}
+            >
+              Contest
+            </button>
 
-              {connectedAccount == poll?.director && !poll?.deleted ? (
-                <>
-                  <button
-                    type="button"
-                    className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
+            {connectedAccount == poll?.director && !poll?.deleted ? (
+              <>
+                <button
+                  type="button"
+                  className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
                  font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
                  focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                    onClick={() =>
-                      setGlobalState('updatePollModal', 'scale-100')
-                    }
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-block px-6 py-2 border-2 border-red-600 text-red-600
+                  onClick={() => setGlobalState('updatePollModal', 'scale-100')}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="inline-block px-6 py-2 border-2 border-red-600 text-red-600
                  font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
                  focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                    onClick={() =>
-                      setGlobalState('deletePollModal', 'scale-100')
-                    }
-                  >
-                    Delete
-                  </button>
-                </>
-              ) : null}
-            </div>
-          ) : null}
+                  onClick={() => setGlobalState('deletePollModal', 'scale-100')}
+                >
+                  Delete
+                </button>
+              </>
+            ) : null}
+          </div>
         </div>
       </div>
 
@@ -199,7 +193,7 @@ const Votee = ({ contestant, poll }) => {
                   font-medium text-xs leading-tight uppercase rounded-full hover:bg-black
                   hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150
                   ease-in-out ml-8"
-              onClick={() => handleVote(poll?.id, (contestant?.id - 1))}
+              onClick={() => handleVote(poll?.id, contestant?.id)}
             >
               Vote
             </button>
