@@ -17,8 +17,8 @@ const UpdatePoll = () => {
     setTitle(poll?.title)
     setDescription(poll?.description)
     setImage(poll?.image)
-    setStartsAt(toDate(poll?.startsAt.toNumber() * 1000))
-    setEndsAt(toDate(poll?.endsAt.toNumber() * 1000))
+    setStartsAt(toDate(poll?.startsAt))
+    setEndsAt(toDate(poll?.endsAt))
   }, [poll])
 
   const closeModal = () => {
@@ -52,7 +52,7 @@ const UpdatePoll = () => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Updated, will reflect within 30sec 👌',
+        success: 'Updated updated successfully 👌',
         error: 'Encountered error 🤯',
       },
     )

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import Moment from 'react-moment'
 import { useNavigate } from 'react-router-dom'
 import { truncate } from '../store'
 
@@ -60,17 +59,16 @@ const Poll = ({ poll }) => {
         <div className="p-6">
           <h5 className="text-gray-900 text-xl font-medium">{poll.title}</h5>
           <small className="font-bold mb-4 text-xs">
-            {new Date().getTime() > Number(poll.startsAt + '000') &&
-            Number(poll.endsAt + '000') > Number(poll.startsAt + '000') ? (
+            {Date.now() > poll.startsAt && poll.endsAt > poll.startsAt ? (
               <span className="text-green-700">Started</span>
-            ) : new Date().getTime() > Number(poll.endsAt + '000') ? (
-              <Moment className="text-red-700" unix format="ddd DD MMM, YYYY">
-                {poll.endsAt}
-              </Moment>
+            ) : Date.noq() > poll.endsAt ? (
+              <span className="text-red-700">
+                {convertTimestamp(poll?.endsAt)}
+              </span>
             ) : (
-              <Moment className="text-gray-500" unix format="ddd DD MMM, YYYY">
-                {poll.startsAt}
-              </Moment>
+              <span className="text-gray-500">
+                {convertTimestamp(poll?.startsAt)}
+              </span>
             )}
           </small>
           <p className="text-gray-700 text-base mb-4">

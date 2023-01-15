@@ -42,7 +42,7 @@ const CreatePoll = () => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Created, will reflect within 30sec 👌',
+        success: 'Created successfully 👌',
         error: 'Encountered error 🤯',
       },
     )

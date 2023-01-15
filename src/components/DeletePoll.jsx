@@ -20,7 +20,7 @@ const DeletePoll = () => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Deleted, will reflect within 30sec 👌',
+        success: 'Deleted successfully 👌',
         error: 'Encountered error 🤯',
       },
     )

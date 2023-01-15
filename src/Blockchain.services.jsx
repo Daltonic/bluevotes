@@ -6,6 +6,7 @@ import { ethers } from 'ethers'
 const { ethereum } = window
 const contractAddress = address.address
 const contractAbi = abi.abi
+let tx
 
 const getEtheriumContract = () => {
   const connectedAccount = getGlobalState('connectedAccount')
@@ -33,8 +34,8 @@ const isWallectConnected = async () => {
 
     window.ethereum.on('accountsChanged', async () => {
       setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
-      // await isWallectConnected()
-      window.location.reload()
+      await isWallectConnected()
+      // window.location.reload()
     })
 
     if (accounts.length) {
@@ -63,9 +64,17 @@ const createPoll = async ({ title, image, startsAt, endsAt, description }) => {
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.createPoll(image, title, description, startsAt, endsAt, {
-      from: connectedAccount,
-    })
+    tx = await contract.createPoll(
+      image,
+      title,
+      description,
+      startsAt,
+      endsAt,
+      {
+        from: connectedAccount,
+      },
+    )
+    await tx.wait()
     await getPolls()
   } catch (error) {
     reportError(error)
@@ -84,9 +93,18 @@ const updatePoll = async ({
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.updatePoll(id, image, title, description, startsAt, endsAt, {
-      from: connectedAccount,
-    })
+    tx = await contract.updatePoll(
+      id,
+      image,
+      title,
+      description,
+      startsAt,
+      endsAt,
+      {
+        from: connectedAccount,
+      },
+    )
+    await tx.wait()
     await getPolls()
   } catch (error) {
     reportError(error)
@@ -98,9 +116,10 @@ const deletePoll = async (id) => {
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.deletePoll(id, {
+    tx = await contract.deletePoll(id, {
       from: connectedAccount,
     })
+    await tx.wait()
   } catch (error) {
     reportError(error)
   }
@@ -111,7 +130,8 @@ const registerUser = async ({ fullname, image }) => {
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.register(image, fullname, { from: connectedAccount })
+    tx = await contract.register(image, fullname, { from: connectedAccount })
+    await tx.wait()
     await getUser()
   } catch (error) {
     reportError(error)
@@ -157,8 +177,10 @@ const contest = async (id) => {
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.contest(id, { from: connectedAccount })
+    tx = await contract.contest(id, { from: connectedAccount })
+    await tx.wait()
     await getPoll(id)
+    await listContestants(id)
   } catch (error) {
     reportError(error)
   }
@@ -169,7 +191,8 @@ const vote = async (id, cid) => {
     if (!ethereum) return alert('Please install Metamask')
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = getEtheriumContract()
-    await contract.vote(id, cid, { from: connectedAccount })
+    tx = await contract.vote(id, cid, { from: connectedAccount })
+    await tx.wait()
     await getPoll(id)
     await listContestants(id)
   } catch (error) {
@@ -194,8 +217,8 @@ const structuredPolls = (polls) =>
       id: Number(poll.id),
       title: poll.title,
       votes: Number(poll.votes),
-      startsAt: poll.startsAt,
-      endsAt: poll.endsAt,
+      startsAt: Number(poll?.startsAt + '000'),
+      endsAt: Number(poll?.endsAt + '000'),
       contestants: Number(poll.contestants),
       director: poll.director?.toLowerCase(),
       image: poll.image,

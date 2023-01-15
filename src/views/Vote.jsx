@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPoll, contest, listContestants, vote } from '../Blockchain.services'
 import { useGlobalState, setGlobalState, truncate } from '../store'
-import Moment from 'react-moment'
 import Identicon from 'react-identicons'
 
 const Vote = () => {
@@ -21,10 +20,19 @@ const Vote = () => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Contested, will reflect within 30sec 👌',
+        success: 'Contested successfully 👌',
         error: 'Encountered error 🤯',
       },
     )
+  }
+
+  const convertTimestamp = (timestamp) => {
+    const date = new Date(timestamp)
+    const day = date.toLocaleString('en-us', { weekday: 'short' })
+    const month = date.toLocaleString('en-us', { month: 'short' })
+    const year = date.getFullYear()
+    const dayOfMonth = date.getDate()
+    return `${day} ${dayOfMonth} ${month}, ${year}`
   }
 
   useEffect(async () => {
@@ -45,15 +53,13 @@ const Vote = () => {
           {poll?.description}
         </p>
 
-        <div className="flex justify-center items-center space-x-2 my-2 text-sm">
-          <Moment className="text-gray-500" unix format="ddd DD MMM, YYYY">
-            {poll?.startsAt}
-          </Moment>
-          <span> - </span>
-          <Moment className="text-gray-500" unix format="ddd DD MMM, YYYY">
-            {poll?.endsAt}
-          </Moment>
-        </div>
+        {poll?.startsAt ? (
+          <div className="flex justify-center items-center space-x-2 my-2 text-sm">
+            <span>{convertTimestamp(poll?.startsAt)}</span>
+            <span> - </span>
+            <span>{convertTimestamp(poll?.endsAt)}</span>
+          </div>
+        ) : null}
 
         <div className="flex justify-center items-center space-x-2 text-sm">
           <Identicon
@@ -72,8 +78,7 @@ const Vote = () => {
         </div>
 
         <div className="flex justify-center my-3">
-          {new Date().getTime() >
-          Number(poll?.startsAt + '000') ? null : poll?.deleted ? null : (
+          {Date.now < poll?.startsAt ? (
             <div className="flex space-x-2">
               <button
                 type="button"
@@ -85,7 +90,7 @@ const Vote = () => {
                 Contest
               </button>
 
-              {connectedAccount == poll?.director ? (
+              {connectedAccount == poll?.director && !poll?.deleted ? (
                 <>
                   <button
                     type="button"
@@ -112,7 +117,7 @@ const Vote = () => {
                 </>
               ) : null}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -151,7 +156,7 @@ const Votee = ({ contestant, poll }) => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Voted, will reflect within 30sec 👌',
+        success: 'Voted successfully 👌',
         error: 'Encountered error 🤯',
       },
     )
@@ -187,15 +192,14 @@ const Votee = ({ contestant, poll }) => {
           <span className="text-gray-600 text-sm">
             {contestant?.votes} votes
           </span>
-          {new Date().getTime() > Number(poll?.startsAt + '000') &&
-          Number(poll?.endsAt + '000') > new Date().getTime() ? (
+          {Date.now() > poll?.startsAt && poll?.endsAt > Date.now() ? (
             <button
               type="button"
               className="inline-block px-3 py-1 border-2 border-gray-800 text-gray-800
                   font-medium text-xs leading-tight uppercase rounded-full hover:bg-black
                   hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150
                   ease-in-out ml-8"
-              onClick={() => handleVote(poll?.id, contestant?.id)}
+              onClick={() => handleVote(poll?.id, (contestant?.id - 1))}
             >
               Vote
             </button>

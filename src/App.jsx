@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { getPolls, getUser, isWallectConnected } from './Blockchain.services'
 import { ToastContainer } from 'react-toastify'
-import { checkAuthState } from './Chat.services'
 import CreatePoll from './components/CreatePoll'
 import DeletePoll from './components/DeletePoll'
 import Footer from './components/Footer'
@@ -18,7 +17,6 @@ const App = () => {
     await isWallectConnected()
     await getPolls()
     await getUser()
-    await checkAuthState()
     setLoaded(true)
     console.log('Blockchain loaded')
   }, [])
