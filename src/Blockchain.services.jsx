@@ -2,7 +2,6 @@ import abi from './abis/src/contracts/BlueVotes.sol/BlueVotes.json'
 import address from './abis/contractAddress.json'
 import { getGlobalState, setGlobalState } from './store'
 import { ethers } from 'ethers'
-import { checkAuthState, logOutWithCometChat } from './Chat.services'
 
 const { ethereum } = window
 const contractAddress = address.address
@@ -35,9 +34,6 @@ const isWallectConnected = async () => {
     window.ethereum.on('accountsChanged', async () => {
       setGlobalState('connectedAccount', accounts[0]?.toLowerCase())
       // await isWallectConnected()
-      await logOutWithCometChat()
-      // await checkAuthState()
-      // await getUser()
       window.location.reload()
     })
 
@@ -209,7 +205,7 @@ const structuredPolls = (polls) =>
     }))
     .reverse()
 
-const structuredContestants = (contestants, connectedAccount) =>
+const structuredContestants = (contestants) =>
   contestants
     .map((contestant) => ({
       id: Number(contestant.id),

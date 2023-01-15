@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPoll, contest, listContestants, vote } from '../Blockchain.services'
 import { useGlobalState, setGlobalState, truncate } from '../store'
 import Moment from 'react-moment'
 import Identicon from 'react-identicons'
-import Messages from '../components/Messages'
-import { createNewGroup, getGroup, joinGroup } from '../Chat.services'
 
 const Vote = () => {
   const { id } = useParams()
-  const navigate = useNavigate()
   const [poll] = useGlobalState('poll')
   const [connectedAccount] = useGlobalState('connectedAccount')
-  const [currentUser] = useGlobalState('currentUser')
   const [contestants] = useGlobalState('contestants')
-  const [group, setGroup] = useState(null)
 
   const handleContest = async () => {
     await toast.promise(
@@ -32,40 +27,9 @@ const Vote = () => {
     )
   }
 
-  const handCreateGroup = async () => {
-    await toast.promise(
-      new Promise(async (resolve, reject) => {
-        await createNewGroup(`pid_${id}`, poll?.title)
-          .then(() => resolve())
-          .catch(() => reject())
-      }),
-      {
-        pending: 'Creating...',
-        success: 'Chat group successfully created. 👌',
-        error: 'Encountered error 🤯',
-      },
-    )
-  }
-
-  const handleGroup = async () => {
-    await getGroup(`pid_${id}`).then(async (res) => {
-      if (!res.code && !res.hasJoined) {
-        await joinGroup(`pid_${id}`)
-        setGroup(res)
-      } else if (!res.code) {
-        setGroup(res)
-      }
-    })
-  }
-
   useEffect(async () => {
     await getPoll(id)
     await listContestants(id)
-    if (!currentUser) {
-      toast('Please, register and login in first...')
-      navigate('/')
-    }
-    await handleGroup()
   }, [])
 
   return (
@@ -123,17 +87,6 @@ const Vote = () => {
 
               {connectedAccount == poll?.director ? (
                 <>
-                  {!group ? (
-                    <button
-                      type="button"
-                      className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
-                      font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5
-                      focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-                      onClick={handCreateGroup}
-                    >
-                      Create Group
-                    </button>
-                  ) : null}
                   <button
                     type="button"
                     className="inline-block px-6 py-2 border-2 border-gray-600 text-gray-600
@@ -175,21 +128,21 @@ const Vote = () => {
             <Votee key={i} contestant={contestant} poll={poll} />
           ))}
         </div>
-        {group ? (
-          <div className="flex flex-col items-center">
-            <h4 className="text-lg font-medium uppercase mt-6 mb-3">
-              Live Chats
-            </h4>
-            <Messages guid={`pid_${id}`} />
-          </div>
-        ) : null}
       </div>
     </div>
   )
 }
 
 const Votee = ({ contestant, poll }) => {
+  const [user] = useGlobalState('user')
+  const navigate = useNavigate()
+
   const handleVote = async (id, cid) => {
+    if (!user) {
+      toast('Please, register and login in first...')
+      navigate('/')
+      return
+    }
     await toast.promise(
       new Promise(async (resolve, reject) => {
         await vote(id, cid)
